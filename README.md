@@ -1,7 +1,7 @@
 # cm-backoffice
 
 ## Description
-Prototipe to test api functionalities.
+Prototype to test api functionality.
 
 ## Execute server
 
