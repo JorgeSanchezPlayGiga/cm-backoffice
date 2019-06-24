@@ -13,3 +13,7 @@ textarea {
 .catalog-versions .viewer .text {
     height: 20rem;
 }
+
+.catalog-version.ui-selected {
+    background-color: #fff59d;
+}

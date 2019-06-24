@@ -46,12 +46,39 @@ $(function() {
                             .html('<article class="card-panel red lighten-4"> ' + response.responseJSON.error + '</article>');
                     });
                 }
+            } else if (key == 'compare') {
+                let catalogsVersionsIds = [];
+                $('.catalog-version.ui-selected').each(function() {
+                    let catalogVersionId = $(this).attr('data-catalog-version-id');
+                    catalogsVersionsIds.push(catalogVersionId);
+                });
+
+                if (catalogsVersionsIds.length !== 2) {
+                    $('.modal .modal-content')
+                        .html('<article class="card-panel red lighten-4">You need select two catalogs version.</article>');
+                    $('.modal').modal('open');
+                    return ;
+                }
+                let uri = 'http://localhost:20443/api/v1/catalogs-versions/compare';
+                console.log('Uri: ' + uri);
+                console.log(catalogsVersionsIds);
+                let postData = {
+                    firstCatalogVersionId: catalogsVersionsIds[1],
+                    secondCatalogVersionId: catalogsVersionsIds[0]
+                }
+
+                $.post(uri, postData, function(response) {
+                    console.log(response);
+                    $('.viewer .text').val(JSON.stringify(response, null, 4));
+                });
+
             }
         },
         items: {
             "show-schema": {name: "Show schema", icon: "context-menu-icon-loading"},
             "show-dump": {name: "Show dump", icon: "context-menu-icon-loading"},
             "delete": {name: "Delete", icon: "delete"},
+            "compare": {name: "Compare", icon: "compare"},
             "sep1": "---------",
             "quit": {name: "Quit", icon: function() {
                     return 'context-menu-icon context-menu-icon-quit';
