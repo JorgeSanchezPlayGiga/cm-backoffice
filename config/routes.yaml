@@ -1,3 +1,6 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+catalog-versions:
+  path: /catalogs-versions
+  controller: App\Controller\CatalogsVersions\CatalogsVersionsController::index

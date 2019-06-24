@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalog version{% endblock %}
+
+{% block body %}
+    <section class="catalog-versions">
+        <h1>Catalogs versions</h1>
+        <section class="add">
+            <a href="#" data-url="/api/v1/catalogs-versions"
+               class="waves-effect waves-light btn blue tooltipped"
+               data-position="top" data-tooltip="Generate a new catalog version">
+                Generate catalog version
+            </a>
+        </section>
+        <section class="list">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Created at</th>
+                        <th scope="col">Catalog version</th>
+                        <th scope="col">Control schema version</th>
+                        <th scope="col">Description</th>
+                    </tr>
+                </thead>
+                <tbody class="context-menu">
+                {% for catalogVersion in catalogsVersions %}
+                    <tr class="catalog-version" data-catalog-version-id="{{ catalogVersion.catalog_version_id }}">
+                        <td>{{ catalogVersion.catalog_version_id }}</td>
+                        <td>{{ catalogVersion.created_at }}</td>
+                        <td>{{ catalogVersion.catalog_version }}</td>
+                        <td>{{ catalogVersion.control_schema_version }}</td>
+                        <td>{{ catalogVersion.description }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+        <section class="modal-one">
+            <div id="modal" class="modal">
+                <div class="modal-content">
+
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="modal-close waves-effect waves-green btn-flat">close</a>
+                </div>
+            </div>
+        </section>
+        <section class="viewer card">
+            <div class="card-content">
+                <p>
+                    <span class="card-title">Viewer</span>
+                </p>
+                <textarea class="text">
+
+                </textarea>
+            </div>
+        </section>
+    </section>
+
+
+{% endblock %}

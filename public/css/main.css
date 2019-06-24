@@ -1,0 +1,15 @@
+textarea {
+    height: unset;
+}
+
+.container {
+    width: 1080px
+}
+
+.catalog-versions .add {
+    text-align: right;
+}
+
+.catalog-versions .viewer .text {
+    height: 20rem;
+}
