@@ -2,6 +2,10 @@ textarea {
     height: unset;
 }
 
+select {
+    display: unset;
+}
+
 .container {
     width: 1080px
 }

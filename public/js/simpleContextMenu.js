@@ -75,10 +75,10 @@ $(function() {
             }
         },
         items: {
-            "show-schema": {name: "Show schema", icon: "context-menu-icon-loading"},
-            "show-dump": {name: "Show dump", icon: "context-menu-icon-loading"},
+            "show-schema": {name: "Show schema", icon: "fa-certificate"},
+            "show-dump": {name: "Show dump", icon: "fa-database"},
             "delete": {name: "Delete", icon: "delete"},
-            "compare": {name: "Compare", icon: "compare"},
+            "compare": {name: "Compare", icon: "fa-balance-scale"},
             "sep1": "---------",
             "quit": {name: "Quit", icon: function() {
                     return 'context-menu-icon context-menu-icon-quit';

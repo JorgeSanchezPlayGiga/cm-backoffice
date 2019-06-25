@@ -41,5 +41,13 @@ $( document ).ready(function() {
             $('.modal .modal-content')
                 .html('<article class="card-panel red lighten-4">' + response.responseJSON.error + '</article>');
         });
-    })
+    });
+
+    // Select catalog
+    $('.filters .catalog-filter select').change(function() {
+        console.log('Select');
+        let path = window.location.pathname + '?filters[catalogId]=' + $(this).val();
+        console.log('Path: ' + path);
+        window.location = path;
+    });
 });

@@ -3,39 +3,61 @@
 {% block title %}Catalog version{% endblock %}
 
 {% block body %}
-    <section class="catalog-versions">
+    <section class="catalog-versions col s12">
         <h1>Catalogs versions</h1>
-        <section class="add">
-            <a href="#" data-url="/api/v1/catalogs-versions"
-               class="waves-effect waves-light btn blue tooltipped"
-               data-position="top" data-tooltip="Generate a new catalog version">
-                Generate catalog version
-            </a>
-        </section>
-        <section class="list">
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">Created at</th>
-                        <th scope="col">Catalog version</th>
-                        <th scope="col">Control schema version</th>
-                        <th scope="col">Description</th>
-                    </tr>
-                </thead>
-                <tbody class="list-body context-menu">
-                {% for catalogVersion in catalogsVersions %}
-                    <tr class="catalog-version" data-catalog-version-id="{{ catalogVersion.catalog_version_id }}">
-                        <td>{{ catalogVersion.catalog_version_id }}</td>
-                        <td>{{ catalogVersion.created_at }}</td>
-                        <td>{{ catalogVersion.catalog_version }}</td>
-                        <td>{{ catalogVersion.control_schema_version }}</td>
-                        <td>{{ catalogVersion.description }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </section>
+        <div class="row">
+            <section class="filters col s6">
+                <div class="catalog-filter input-file">
+                    <select>
+                        <option value="" disabled selected>Choose catalog</option>
+                        {% for catalog in catalogs %}
+                            <option value="{{ catalog.catalogID }}"{% if catalog.catalogID == catalogId %} selected="selected" {% endif %}>[{{ catalog.catalogID }}] {{ catalog.name }}</option>
+                        {% endfor %}
+                        <label>Select catalog</label>
+                    </select>
+                </div>
+            </section>
+            <section class="add col s6">
+                <a href="#" data-url="/api/v1/catalogs-versions"
+                   class="waves-effect waves-light btn blue tooltipped"
+                   data-position="top" data-tooltip="Generate a new catalog version">
+                    Generate catalog version
+                </a>
+            </section>
+        </div>
+        {% if catalogsVersions|length < 1 %}
+            <section class="card yellow lighten-4">
+                <div class="card-content">
+                    <span class="card-title">No catalog version</span>
+                    <p>Choose other catalog or generate the first catalog version.</p>
+                </div>
+            </section>
+        {% else %}
+            <section class="list row">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Created at</th>
+                            <th scope="col">Catalog version</th>
+                            <th scope="col">Control schema version</th>
+                            <th scope="col">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody class="list-body context-menu">
+                    {% for catalogVersion in catalogsVersions %}
+                        <tr class="catalog-version" data-catalog-version-id="{{ catalogVersion.catalog_version_id }}">
+                            <td>{{ catalogVersion.catalog_version_id }}</td>
+                            <td>{{ catalogVersion.created_at }}</td>
+                            <td>{{ catalogVersion.catalog_version }}</td>
+                            <td>{{ catalogVersion.control_schema_version }}</td>
+                            <td>{{ catalogVersion.description }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        {% endif %}
         <section class="modal-one">
             <div id="modal" class="modal">
                 <div class="modal-content">
