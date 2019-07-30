@@ -11,6 +11,13 @@ $(function() {
                 $.get('http://localhost:20443/api/v1/catalogs-versions/' + catalogVersionId + '/schema', function(data) {
                     console.log(data);
                     $('.viewer .text').val(JSON.stringify(data, null, 4));
+                }).fail(function(response) {
+                    console.log(response);
+                    console.log(response.responseJSON.error);
+
+                    $('.modal.default .modal-content')
+                        .html('<article class="card-panel red lighten-4"> ' + response.responseJSON.error + '</article>');
+                    $('.modal.default').modal('open');
                 });
             } else if (key == 'show-dump') {
                 let catalogVersionId = $(this).attr('data-catalog-version-id');
@@ -18,6 +25,13 @@ $(function() {
                 $.get('http://localhost:20443/api/v1/catalogs-versions/' + catalogVersionId + '/dump', function(data) {
                     console.log(data);
                     $('.viewer .text').val(JSON.stringify(data, null, 4));
+                }).fail(function(response) {
+                    console.log(response);
+                    console.log(response.responseJSON.error);
+
+                    $('.modal.default .modal-content')
+                        .html('<article class="card-panel red lighten-4"> ' + response.responseJSON.error + '</article>');
+                    $('.modal.default').modal('open');
                 });
             } else if (key == 'delete') {
                 let catalogVersionId = $(this).attr('data-catalog-version-id');
@@ -27,8 +41,8 @@ $(function() {
                     let progressHtml = '<div class="progress">'
                              + '<div class="indeterminate"></div>'
                          +'</div>';
-                    $('.modal .modal-content').html(progressHtml);
-                    $('.modal').modal('open');
+                    $('.modal.default .modal-content').html(progressHtml);
+                    $('.modal.default').modal('open');
 
                     let uri = 'http://localhost:20443/api/v1/catalogs-versions/' + catalogVersionId;
                     console.log('Uri: ' + uri);
@@ -42,8 +56,9 @@ $(function() {
                             .html('<article class="card-panel green lighten-4">Catalog version has been deleted successfully.</article>');
                     }).fail(function (response) {
                         console.log(response);
-                        $('.modal .modal-content')
+                        $('.modal.default .modal-content')
                             .html('<article class="card-panel red lighten-4"> ' + response.responseJSON.error + '</article>');
+                        $('.modal.default').modal('open');
                     });
                 }
             } else if (key == 'compare') {
@@ -54,9 +69,9 @@ $(function() {
                 });
 
                 if (catalogsVersionsIds.length !== 2) {
-                    $('.modal .modal-content')
+                    $('.modal.default .modal-content')
                         .html('<article class="card-panel red lighten-4">You need select two catalogs version.</article>');
-                    $('.modal').modal('open');
+                    $('.modal.default').modal('open');
                     return ;
                 }
                 let uri = 'http://localhost:20443/api/v1/catalogs-versions/compare';
@@ -72,11 +87,41 @@ $(function() {
                     $('.viewer .text').val(JSON.stringify(response, null, 4));
                 });
 
+            } else if (key == 'update-control-schema') {
+                console.log('Execute: update-control-schema');
+
+                // Get identifier for selected catalog version
+                let catalogVersionId = $(this).attr('data-catalog-version-id');
+                console.log('catalogVersionId:');
+                console.log(catalogVersionId);
+
+
+                // Get identifier for last catalog version
+                let lastCatalogVersionId = $('.catalog-versions .list .list-body .catalog-version:first').attr('data-catalog-version-id');
+
+                // Check if they are the same
+                if (catalogVersionId != lastCatalogVersionId) {
+                    // they are not the same. Show message.
+                    $('.modal.default .modal-content')
+                        .html('<article class="card-panel red lighten-4">' +
+                            'Catalog version must be the last catalog version created for this catalog.' +
+                        '</article>');
+                    $('.modal.default').modal('open');
+
+                    return ;
+                }
+
+                // Save identifier of catalog version into input of the form
+                $('.modal.update-control-schemas-modal .input-catalog-version-id').val(catalogVersionId);
+
+                // Show form
+                $('.modal.update-control-schemas-modal').modal('open');
             }
         },
         items: {
             "show-schema": {name: "Show schema", icon: "fa-certificate"},
             "show-dump": {name: "Show dump", icon: "fa-database"},
+            "update-control-schema": {name: "Update control schemas", icon: "fa-beer"},
             "delete": {name: "Delete", icon: "delete"},
             "compare": {name: "Compare", icon: "fa-balance-scale"},
             "sep1": "---------",
