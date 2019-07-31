@@ -2,63 +2,89 @@ $(function() {
     $.contextMenu({
         selector: '.catalog-version',
         callback: function(key, options) {
-            // var m = "clicked: " + key;
-            // console.log(key);
-            // window.console && console.log(m) || alert(m);
             if (key == 'show-schema') {
+                // Show preloader
+                $('.modal.preloader').modal('open');
+
+                // Request to fetch schema
                 let catalogVersionId = $(this).attr('data-catalog-version-id');
                 console.log(catalogVersionId);
                 $.get('http://localhost:20443/api/v1/catalogs-versions/' + catalogVersionId + '/schema', function(data) {
                     console.log(data);
-                    $('.viewer .text').val(JSON.stringify(data, null, 4));
+                    // Hidden modal preloader
+                    $('.modal.preloader').modal('close');
+
+                    // Show json schema
+                    $('.modal.viewer .text').val(JSON.stringify(data, null, 4));
+                    $('.modal.viewer').modal('open');
                 }).fail(function(response) {
                     console.log(response);
                     console.log(response.responseJSON.error);
 
-                    $('.modal.default .modal-content')
-                        .html('<article class="card-panel red lighten-4"> ' + response.responseJSON.error + '</article>');
-                    $('.modal.default').modal('open');
+                    // Hidden modal preloader
+                    $('.modal.preloader').modal('close');
+
+                    // Show modal error
+                    $('.modal.message.error .message').html(response.responseJSON.error);
+                    $('.modal.message.error').modal('open');
                 });
             } else if (key == 'show-dump') {
                 let catalogVersionId = $(this).attr('data-catalog-version-id');
                 console.log(catalogVersionId);
+
+                // Show preloader
+                $('.modal.preloader').modal('open');
                 $.get('http://localhost:20443/api/v1/catalogs-versions/' + catalogVersionId + '/dump', function(data) {
                     console.log(data);
-                    $('.viewer .text').val(JSON.stringify(data, null, 4));
+                    // Hidden modal preloader
+                    $('.modal.preloader').modal('close');
+
+                    // Show json schema
+                    $('.modal.viewer .text').val(JSON.stringify(data, null, 4));
+                    $('.modal.viewer').modal('open');
                 }).fail(function(response) {
                     console.log(response);
                     console.log(response.responseJSON.error);
 
-                    $('.modal.default .modal-content')
-                        .html('<article class="card-panel red lighten-4"> ' + response.responseJSON.error + '</article>');
-                    $('.modal.default').modal('open');
+                    // Hidden modal preloader
+                    $('.modal.preloader').modal('close');
+
+                    // Show modal error
+                    $('.modal.message.error .message').html(response.responseJSON.error);
+                    $('.modal.message.error').modal('open');
                 });
             } else if (key == 'delete') {
                 let catalogVersionId = $(this).attr('data-catalog-version-id');
                 console.log(catalogVersionId);
                 if (confirm('Are you sure?')) {
-
-                    let progressHtml = '<div class="progress">'
-                             + '<div class="indeterminate"></div>'
-                         +'</div>';
-                    $('.modal.default .modal-content').html(progressHtml);
-                    $('.modal.default').modal('open');
-
                     let uri = 'http://localhost:20443/api/v1/catalogs-versions/' + catalogVersionId;
                     console.log('Uri: ' + uri);
+
+                    // Show preloader
+                    $('.modal.preloader').modal('open');
                     $.ajax({
                         url: uri ,
                         type: 'delete'
                     }).done(function (response) {
                         console.log(response);
+                        // Remove catalog version from table
                         $('.catalog-version[data-catalog-version-id="' + catalogVersionId + '"]').remove();
-                        $('.modal .modal-content')
-                            .html('<article class="card-panel green lighten-4">Catalog version has been deleted successfully.</article>');
+
+                        // Hidden modal preloader
+                        $('.modal.preloader').modal('close');
+
+                        // Show json schema
+                        let message = 'Catalog version has been deleted successfully.';
+                        $('.modal.message.success .message').html(message);
+                        $('.modal.message.success').modal('open');
                     }).fail(function (response) {
                         console.log(response);
-                        $('.modal.default .modal-content')
-                            .html('<article class="card-panel red lighten-4"> ' + response.responseJSON.error + '</article>');
-                        $('.modal.default').modal('open');
+                        // Hidden modal preloader
+                        $('.modal.preloader').modal('close');
+
+                        // Show modal error
+                        $('.modal.message.error .message').html(response.responseJSON.error);
+                        $('.modal.message.error').modal('open');
                     });
                 }
             } else if (key == 'compare') {
@@ -69,9 +95,10 @@ $(function() {
                 });
 
                 if (catalogsVersionsIds.length !== 2) {
-                    $('.modal.default .modal-content')
-                        .html('<article class="card-panel red lighten-4">You need select two catalogs version.</article>');
-                    $('.modal.default').modal('open');
+                    let message = 'You need select two catalogs version.';
+                    // Show modal error
+                    $('.modal.message.error .message').html(message);
+                    $('.modal.message.error').modal('open');
                     return ;
                 }
                 let uri = 'http://localhost:20443/api/v1/catalogs-versions/compare';
@@ -82,9 +109,23 @@ $(function() {
                     secondCatalogVersionId: catalogsVersionsIds[0]
                 }
 
+                // Show preloader
+                $('.modal.preloader').modal('open');
                 $.post(uri, postData, function(response) {
                     console.log(response);
-                    $('.viewer .text').val(JSON.stringify(response, null, 4));
+                    // Hidden modal preloader
+                    $('.modal.preloader').modal('close');
+
+                    $('.modal.viewer .text').val(JSON.stringify(response, null, 4));
+                    $('.modal.viewer').modal('open');
+                }).fail(function(response) {
+                    console.log(response);
+                    // Hidden modal preloader
+                    $('.modal.preloader').modal('close');
+
+                    // Show modal error
+                    $('.modal.message.error .message').html(response.responseJSON.error);
+                    $('.modal.message.error').modal('open');
                 });
 
             } else if (key == 'update-control-schema') {
@@ -102,11 +143,13 @@ $(function() {
                 // Check if they are the same
                 if (catalogVersionId != lastCatalogVersionId) {
                     // they are not the same. Show message.
-                    $('.modal.default .modal-content')
-                        .html('<article class="card-panel red lighten-4">' +
-                            'Catalog version must be the last catalog version created for this catalog.' +
-                        '</article>');
-                    $('.modal.default').modal('open');
+                    let message = 'Catalog version must be the last catalog version created for this catalog.';
+                    // Hidden modal preloader
+                    $('.modal.preloader').modal('close');
+
+                    // Show modal error
+                    $('.modal.message.error .message').html(message);
+                    $('.modal.message.error').modal('open');
 
                     return ;
                 }

@@ -1,0 +1,39 @@
+<div class="modals">
+    {#
+        Progress bar.
+        This modal is used to show progression bar. User must wait for response.
+    #}
+    <div class="modal preloader">
+        <div class="modal-content">
+            <div class="progress">
+                <div class="indeterminate blue"></div>
+            </div>
+        </div>
+    </div>
+    {#
+        Success
+        This modal show success message.
+    #}
+    <div class="modal message success">
+        <div class="modal-content">
+            <article class="message card-panel green lighten-4">
+            </article>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="modal-close waves-effect waves-blue btn-flat">close</a>
+        </div>
+    </div>
+    {#
+        Error
+        This modal show success message.
+    #}
+    <div class="modal message error">
+        <div class="modal-content">
+            <article class="message card-panel red lighten-4">
+            </article>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="modal-close waves-effect waves-blue btn-flat">close</a>
+        </div>
+    </div>
+</div>

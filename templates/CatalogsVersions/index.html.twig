@@ -81,7 +81,7 @@
             </section>
         {% else %}
             <section class="list row">
-                <table>
+                <table class="highlight centered">
                     <thead>
                         <tr>
                             <th scope="col">Id</th>
@@ -115,17 +115,19 @@
                 </div>
             </div>
         </section>
-        <section class="viewer card">
-            <div class="card-content">
-                <p>
-                    <span class="card-title">Viewer</span>
-                </p>
-                <textarea class="text">
-
-                </textarea>
-            </div>
-        </section>
+        <div class="modal viewer">
+            <section class="card">
+                <div class="card-content">
+                    <p>
+                        <span class="card-title">Viewer</span>
+                    </p>
+                    <textarea class="text">
+                    </textarea>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="modal-close waves-effect waves-green btn-flat">close</a>
+                </div>
+            </section>
+        </div>
     </section>
-
-
 {% endblock %}

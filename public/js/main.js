@@ -66,25 +66,21 @@ $( document ).ready(function() {
         // Prevent event
         event.preventDefault();
 
-        // Hidden modal to update control schema
-        $('.modal.update-control-schemas-modal').modal('close');
-
-        // Show modal with progress bar
-        let progressHtml = '<div class="progress">'
-            + '<div class="indeterminate"></div>'
-            +'</div>';
-        $('.modal.default .modal-content').html(progressHtml);
-        $('.modal.default').modal('open');
-
         // Resquest to create catalog only with the control schemas updated
         let catalogVersionId = $('.modal.update-control-schemas-modal .input-catalog-version-id').val();
         let uri = 'http://localhost:20443/api/v1/catalogs-versions/' + catalogVersionId + '/control-schemas';
         console.log('Uri: ' + uri);
 
-        //
+        // Build data to request
         let requestData = {
             description: $('.modal.update-control-schemas-modal .input-description').val()
         };
+
+        // Hidden modal to update control schema
+        $('.modal.update-control-schemas-modal').modal('close');
+
+        // Show preloader
+        $('.modal.preloader').modal('open');
 
         // Request to service
         $.ajax({
@@ -93,10 +89,6 @@ $( document ).ready(function() {
             data: requestData
         }).done(function (response) {
             console.log(response);
-            //  Show message
-            $('.modal .modal-content')
-                .html('<article class="card-panel green lighten-4">Catalog version has been created successfully.</article>');
-
             // Add row to table with the new catalog version
             $('.catalog-versions .list .list-body').prepend(
                 '<tr class="catalog-version" data-catalog-version-id="' + response.catalog_version_id + '">' +
@@ -108,16 +100,26 @@ $( document ).ready(function() {
                 '</tr>'
             );
 
+            // Reset value form
+            $('.modal.update-control-schemas-modal .input-description').val('');
+
+            // Hidden modal preloader
+            $('.modal.preloader').modal('close');
+
+            // Show json schema
+            let message = 'Catalog version has been created successfully.';
+            $('.modal.message.success .message').html(message);
+            $('.modal.message.success').modal('open');
         }).fail(function (response) {
-            // Close modal
-            $('.modal.update-control-schemas-modal').modal('close');
             console.log('Ups! fail: ');
             console.log(response);
 
-            // Show message
-            $('.modal.default .modal-content')
-                .html('<article class="card-panel red lighten-4"> ' + response.responseJSON.error + '</article>');
-            $('.modal.default').modal('open');
+            // Hidden modal preloader
+            $('.modal.preloader').modal('close');
+
+            // Show modal error
+            $('.modal.message.error .message').html(response.responseJSON.error);
+            $('.modal.message.error').modal('open');
         });
     });
 
